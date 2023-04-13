@@ -8,9 +8,9 @@
 
 ## 🚩 Table of Contents
 
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Command line interface](#%EF%B8%8F-command-line-interface)
+-   [Installation](#-installation)
+-   [Usage](#-usage)
+-   [Command line interface](#%EF%B8%8F-command-line-interface)
 
 ## 💾 Installation
 
@@ -30,7 +30,7 @@ You can use `--title` and `--chapter` command line argument to download by title
 
 You can download individual chapters or full title (but only available chapters).
 
-Chapters can be saved as `CBZ` archives (default) or separate images by passing the `--raw` parameter.
+Chapters can be saved in different formats (check the `--help` output for the available formats).
 
 ## 🖥️ Command line interface
 
@@ -45,20 +45,16 @@ Options:
   --version                       Show the version and exit.
   -o, --out <directory>           Save directory (not a file)  [default:
                                   mloader_downloads]
-  -r, --raw                       Save raw images  [default: False]
+  -f, --format [raw|cbz|pdf]      Output format  [default: cbz]
   -q, --quality [super_high|high|low]
                                   Image quality  [default: super_high]
-  -s, --split                     Split combined images  [default: False]
+  -s, --split                     Split combined images
   -c, --chapter INTEGER           Chapter id
   -t, --title INTEGER             Title id
   -b, --begin INTEGER RANGE       Minimal chapter to try to download
                                   [default: 0;x>=0]
   -e, --end INTEGER RANGE         Maximal chapter to try to download  [x>=1]
   -l, --last                      Download only the last chapter for title
-                                  [default: False]
   --chapter-title                 Include chapter titles in filenames
-                                  [default: False]
-  --chapter-subdir                Save raw images in sub directory by chapter
-                                  [default: False]
   --help                          Show this message and exit.
 ```

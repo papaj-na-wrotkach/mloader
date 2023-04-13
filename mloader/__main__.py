@@ -7,7 +7,7 @@ from typing import Optional, Set
 import click
 
 from mloader import __version__ as about
-from mloader.exporter import RawExporter, CBZExporter
+from mloader.exporter import CBZExporter, ExporterBase
 from mloader.loader import MangaLoader
 
 log = logging.getLogger()
@@ -102,13 +102,17 @@ Examples:
     envvar="MLOADER_EXTRACT_OUT_DIR",
 )
 @click.option(
-    "--raw",
-    "-r",
-    is_flag=True,
-    default=False,
+    "--format",
+    "-f",
+    "exporter",
+    type=click.Choice(
+        tuple(ExporterBase.FORMAT_REGISTRY), case_sensitive=False
+    ),
+    default=CBZExporter.format,
     show_default=True,
-    help="Save raw images",
-    envvar="MLOADER_RAW",
+    help="Output format",
+    envvar="MLOADER_FORMAT",
+    callback=lambda _, __, value: ExporterBase.FORMAT_REGISTRY[value.lower()],
 )
 @click.option(
     "--quality",
@@ -175,26 +179,18 @@ Examples:
     show_default=True,
     help="Include chapter titles in filenames",
 )
-@click.option(
-    "--chapter-subdir",
-    is_flag=True,
-    default=False,
-    show_default=True,
-    help="Save raw images in sub directory by chapter",
-)
 @click.argument("urls", nargs=-1, callback=validate_urls, expose_value=False)
 @click.pass_context
 def main(
     ctx: click.Context,
     out_dir: str,
-    raw: bool,
+    exporter: ExporterBase,
     quality: str,
     split: bool,
     begin: int,
     end: int,
     last: bool,
     chapter_title: bool,
-    chapter_subdir: bool,
     chapters: Optional[Set[int]] = None,
     titles: Optional[Set[int]] = None,
 ):
@@ -205,9 +201,8 @@ def main(
     end = end or float("inf")
     log.info("Started export")
 
-    exporter = RawExporter if raw else CBZExporter
     exporter = partial(
-        exporter, destination=out_dir, add_chapter_title=chapter_title, add_chapter_subdir=chapter_subdir
+        exporter, destination=out_dir, add_chapter_title=chapter_title
     )
 
     loader = MangaLoader(exporter, quality, split)
